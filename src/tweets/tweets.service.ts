@@ -5,7 +5,11 @@ import {
   Mentions,
 } from './interfaces/tweets.interface';
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { lastValueFrom, map } from 'rxjs';
 import { User } from './interfaces/user.interface';
 
@@ -15,17 +19,27 @@ export class TweetsService {
 
   async findUser(business: string, max_results: number): Promise<Mentions> {
     if (max_results > 100) {
-      // erro
+      throw new BadRequestException(
+        'Bad max_results value',
+        'This variable must be less than 100',
+      );
     } else if (max_results < 5) {
-      // outro erro
+      throw new BadRequestException(
+        'Bad max_results value',
+        'This variable must be greather than 5',
+      );
     }
 
     const urlMentionsQuery = `expansions=author_id&user.fields=name&max_results=${max_results}`;
 
     const user: User = await lastValueFrom(
-      this.httpService
-        .get('users/by/username/' + business)
-        .pipe(map((response) => response.data)),
+      this.httpService.get('users/by/username/' + business).pipe(
+        map((response) => {
+          if (response.data.errors && response.data.errors.length > 0)
+            throw new NotFoundException(response.data);
+          else return response.data;
+        }),
+      ),
     );
 
     const userData = user.data;

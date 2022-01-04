@@ -1,17 +1,14 @@
-import { Tweets } from './interfaces/tweets.interface';
-import { AxiosResponse } from 'axios';
-import { Observable } from 'rxjs';
 import { TweetsService } from './tweets.service';
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
+import { Mentions } from './interfaces/tweets.interface';
+import { SearchBusinessDto } from './dto/search-business.dto';
 
 @Controller('tweets')
 export class TweetsController {
   constructor(private tweetsService: TweetsService) {}
 
-  @Get(':business')
-  getTweets(
-    @Param('business') business: string,
-  ): Observable<AxiosResponse<Tweets[]>> {
-    return this.tweetsService.findUser(business);
+  @Get()
+  getTweets(@Query() query: SearchBusinessDto): Promise<Mentions> {
+    return this.tweetsService.findUser(query.business, query.max_results);
   }
 }

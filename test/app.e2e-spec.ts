@@ -15,8 +15,8 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('should return 404 for /', () => {
-    return request(app.getHttpServer()).get('/').expect(404);
+  it('should return 200 for /', () => {
+    return request(app.getHttpServer()).get('/').expect(200);
   });
 
   it('should return 200 for /tweets with correct query string', async () => {

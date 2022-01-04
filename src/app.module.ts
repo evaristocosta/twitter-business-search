@@ -1,6 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AppController } from './app.controller';
 import { TweetsController } from './tweets/tweets.controller';
 import { TweetsService } from './tweets/tweets.service';
 
@@ -15,7 +16,7 @@ import { TweetsService } from './tweets/tweets.service';
       },
     }),
   ],
-  controllers: [TweetsController],
+  controllers: [AppController, TweetsController],
   providers: [TweetsService],
 })
 export class AppModule {}

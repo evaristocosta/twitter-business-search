@@ -9,18 +9,10 @@ export class TweetsController {
 
   @Get()
   getTweets(@Query() query: SearchBusinessDto): Promise<Mentions> {
-    /* if (!query.business || !query.max_results) {
-      throw new BadRequestException('Missing query params');
-    } */
+    if (!query.business || !query.max_results) {
+      throw new BadRequestException('Missing query values');
+    }
 
     return this.tweetsService.findTweets(query.business, query.max_results);
   }
-
-  /* @Get()
-  getTweets(
-    @Query('business') business: string,
-    @Query('max_results') max_results: number,
-  ): Promise<Mentions> {
-    return this.tweetsService.findTweets(business, max_results);
-  } */
 }

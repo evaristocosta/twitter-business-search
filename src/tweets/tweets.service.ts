@@ -4,13 +4,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { lastValueFrom, map } from 'rxjs';
+import { catchError, lastValueFrom, map } from 'rxjs';
 import { User, UserData } from './interfaces/user.interface';
-import {
-  TweetData,
-  AuthorData,
-  TweetsResponse,
-} from './interfaces/tweets.interface';
+import { TweetData, TweetsResponse } from './interfaces/tweets.interface';
 import { Mentions, MentionsContent } from './interfaces/mentions.interface';
 
 @Injectable()
@@ -45,7 +41,7 @@ export class TweetsService {
     };
   }
 
-  private async findUser(business: string): Promise<User> {
+  async findUser(business: string): Promise<User> {
     return await lastValueFrom(
       this.httpService.get('users/by/username/' + business).pipe(
         map((response) => {
@@ -53,11 +49,14 @@ export class TweetsService {
             throw new NotFoundException(response.data);
           else return response.data;
         }),
+        catchError((error) => {
+          throw new NotFoundException(error.response.data);
+        }),
       ),
     );
   }
 
-  private async getMentionsOfUser(
+  async getMentionsOfUser(
     userData: UserData,
     urlMentionsQuery: string,
   ): Promise<MentionsContent[]> {
@@ -73,7 +72,7 @@ export class TweetsService {
             // merge author data with tweet data matching author_id
             const mergedTweets = tweets.map((tweet: TweetData) => {
               const author = authors.find(
-                (author: AuthorData) => author.id === tweet.author_id,
+                (author: UserData) => author.id === tweet.author_id,
               );
               return {
                 author_name: author.name,

@@ -1,7 +1,9 @@
 export interface User {
-  data: {
-    id: string;
-    name: string;
-    username: string;
-  };
+  data: UserData;
+}
+
+export interface UserData {
+  id: string;
+  name: string;
+  username: string;
 }

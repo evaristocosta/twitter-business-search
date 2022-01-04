@@ -1,9 +1,3 @@
-import {
-  TweetData,
-  AuthorData,
-  TweetsResponse,
-  Mentions,
-} from './interfaces/tweets.interface';
 import { HttpService } from '@nestjs/axios';
 import {
   BadRequestException,
@@ -11,13 +5,19 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { lastValueFrom, map } from 'rxjs';
-import { User } from './interfaces/user.interface';
+import { User, UserData } from './interfaces/user.interface';
+import {
+  TweetData,
+  AuthorData,
+  TweetsResponse,
+} from './interfaces/tweets.interface';
+import { Mentions, MentionsContent } from './interfaces/mentions.interface';
 
 @Injectable()
 export class TweetsService {
   constructor(private httpService: HttpService) {}
 
-  async findUser(business: string, max_results: number): Promise<Mentions> {
+  async findTweets(business: string, max_results: number): Promise<Mentions> {
     if (max_results > 100) {
       throw new BadRequestException(
         'Bad max_results value',
@@ -32,7 +32,21 @@ export class TweetsService {
 
     const urlMentionsQuery = `expansions=author_id&user.fields=name&max_results=${max_results}`;
 
-    const user: User = await lastValueFrom(
+    const user: User = await this.findUser(business);
+    const userData = user.data;
+
+    const tweets = await this.getMentionsOfUser(userData, urlMentionsQuery);
+
+    return {
+      business_id: userData.id,
+      business_name: userData.name,
+      business_username: userData.username,
+      mentions: tweets,
+    };
+  }
+
+  private async findUser(business: string): Promise<User> {
+    return await lastValueFrom(
       this.httpService.get('users/by/username/' + business).pipe(
         map((response) => {
           if (response.data.errors && response.data.errors.length > 0)
@@ -41,10 +55,13 @@ export class TweetsService {
         }),
       ),
     );
+  }
 
-    const userData = user.data;
-
-    const tweets = await lastValueFrom(
+  private async getMentionsOfUser(
+    userData: UserData,
+    urlMentionsQuery: string,
+  ): Promise<MentionsContent[]> {
+    return await lastValueFrom(
       this.httpService
         .get(`users/${userData.id}/mentions?${urlMentionsQuery}`)
         .pipe(
@@ -71,12 +88,5 @@ export class TweetsService {
           }),
         ),
     );
-
-    return {
-      business_id: userData.id,
-      business_name: userData.name,
-      business_username: userData.username,
-      mentions: tweets,
-    };
   }
 }

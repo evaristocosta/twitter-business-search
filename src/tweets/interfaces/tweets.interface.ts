@@ -16,16 +16,3 @@ export interface TweetsResponse {
     users: Array<AuthorData>;
   };
 }
-
-export interface Mentions {
-  business_id: string;
-  business_name: string;
-  business_username: string;
-  mentions: Array<{
-    author_name: string;
-    author_id: string;
-    author_username: string;
-    tweet_id: string;
-    tweet_text: string;
-  }>;
-}

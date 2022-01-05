@@ -1,73 +1,66 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Twitter Business Search
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A simple API for searching mention tweets about a Twitter business or user.
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The TBS (Twitter Business Search) is a project built with the purpose of personal learning of tools like NestJS and the Twitter API.
 
-## Installation
+Its only objective is to retrieve tweets that mention a Twitter business or user based on query parameters.
 
-```bash
-$ npm install
+## Using the API
+
+TBS is freely avaliable on ... and can be accessed through this URL: <>.
+
+Two query parameters must be present:
+
+- `business`: the username to look for;
+- `max_results`: total tweets to retrieve, respecting the range [5, 100].
+
+A JSON response is expected, containing the following structure:
+
+```json
+{
+  "business_id": the user id,
+  "business_name": public name,
+  "business_username": Twitter username,
+  "mentions": [
+    {
+      "author_name": who have mentioned the user,
+      "author_id": numeric id,
+      "author_username": username from who mentioned,
+      "tweet_id": numeric tweet id,
+      "tweet_text": text of the tweet
+    },
+    ...
+  ]
+}
 ```
 
-## Running the app
+## Example
 
-```bash
-# development
-$ npm run start
+One could use the API making a GET HTTP request to the base URL to search tweets mentioning Microsoft, for example. This can be done using `curl` with the following command:
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```shell
+$ curl "http://.../tweets?business=Microsoft&max_results=10"
 ```
 
-## Test
+## Run locally (development)
 
-```bash
-# unit tests
-$ npm run test
+To run this application locally, you will need to install the following dependencies:
 
-# e2e tests
-$ npm run test:e2e
+- Node (v17.3)
+- Yarn (v3.1.1)
+- NestJS (v8.1.6)
 
-# test coverage
-$ npm run test:cov
+Then, clone the repository and run the following command inside the project folder:
+```shell
+$ yarn install
 ```
 
-## Support
+Create a `.env` file at the root of the project, following the structure set on `env.example`. You will need a Twitter API Bearer Token to run the application ([more information here](https://developer.twitter.com/en)).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+After that, you can run the application using the following command:
+```shell
+$ yarn start:dev
+```

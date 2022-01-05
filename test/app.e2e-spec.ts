@@ -40,7 +40,7 @@ describe('AppController (e2e)', () => {
 
   it('should return error for /tweets when business doesnt exist', () => {
     const queryUrl = '?business=businessthatdoesnotexist&max_results=10';
-    return request(app.getHttpServer()).get(`/tweets${queryUrl}`).expect(404);
+    return request(app.getHttpServer()).get(`/tweets${queryUrl}`).expect(400);
   });
 
   it('should return bad request for out of range max_results in /tweets', () => {

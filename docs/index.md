@@ -1,37 +1,66 @@
-## Welcome to GitHub Pages
+# Twitter Business Search
 
-You can use the [editor on GitHub](https://github.com/evaristocosta/twitter-business-search/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+A simple API for searching mention tweets about a Twitter business or user.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Description
 
-### Markdown
+The TBS (Twitter Business Search) is a project built with the purpose of personal learning of tools like NestJS and the Twitter API.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Its only objective is to retrieve tweets that mention a Twitter business or user based on query parameters.
 
-```markdown
-Syntax highlighted code block
+## Using the API
 
-# Header 1
-## Header 2
-### Header 3
+TBS is freely avaliable on Heroku and can be accessed through this URL: https://twitter-business-search.herokuapp.com/tweets.
 
-- Bulleted
-- List
+Two query parameters must be present:
 
-1. Numbered
-2. List
+- `business`: the username to look for;
+- `max_results`: total tweets to retrieve, respecting the range [5, 100].
 
-**Bold** and _Italic_ and `Code` text
+A JSON response is expected, containing the following structure:
 
-[Link](url) and ![Image](src)
+```json
+{
+  "business_id": the user id,
+  "business_name": public name,
+  "business_username": Twitter username,
+  "mentions": [
+    {
+      "author_name": who have mentioned the user,
+      "author_id": numeric id,
+      "author_username": username from who mentioned,
+      "tweet_id": numeric tweet id,
+      "tweet_text": text of the tweet
+    },
+    ...
+  ]
+}
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+## Example
 
-### Jekyll Themes
+One could use the API making a GET HTTP request to the base URL to search tweets mentioning Microsoft, for example. This can be done using `curl` with the following command:
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/evaristocosta/twitter-business-search/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+```shell
+$ curl "https://twitter-business-search.herokuapp.com/tweets?business=Microsoft&max_results=10"
+```
 
-### Support or Contact
+## Run locally (development)
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+To run this application locally, you will need to install the following dependencies:
+
+- Node (v17.3)
+- Yarn (v3.1.1)
+- NestJS (v8.1.6)
+
+Then, clone the repository and run the following command inside the project folder:
+```shell
+$ yarn install
+```
+
+Create a `.env` file at the root of the project, following the structure set on `.env.example`. You will need a Twitter API Bearer Token to run the application ([more information here](https://developer.twitter.com/en)).
+
+After that, you can run the application using the following command:
+```shell
+$ yarn start:dev
+```

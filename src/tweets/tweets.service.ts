@@ -1,9 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { catchError, lastValueFrom, map } from 'rxjs';
 import { User, UserData } from './interfaces/user.interface';
 import { TweetData, TweetsResponse } from './interfaces/tweets.interface';
@@ -26,11 +22,10 @@ export class TweetsService {
       );
     }
 
-    const urlMentionsQuery = `expansions=author_id&user.fields=name&max_results=${max_results}`;
-
     const user: User = await this.findUser(business);
     const userData = user.data;
 
+    const urlMentionsQuery = `expansions=author_id&user.fields=name&max_results=${max_results}`;
     const tweets = await this.getMentionsOfUser(userData, urlMentionsQuery);
 
     return {
@@ -46,11 +41,13 @@ export class TweetsService {
       this.httpService.get('users/by/username/' + business).pipe(
         map((response) => {
           if (response.data.errors && response.data.errors.length > 0)
-            throw new NotFoundException(response.data);
+            throw response.data;
           else return response.data;
         }),
         catchError((error) => {
-          throw new NotFoundException(error.response.data);
+          if (error?.response?.status)
+            throw new HttpException(error.response.data, error.response.status);
+          else throw new HttpException(error, 500);
         }),
       ),
     );
@@ -66,6 +63,17 @@ export class TweetsService {
         .pipe(
           map((response) => {
             const resp: TweetsResponse = response.data;
+
+            if (resp.meta?.result_count === 0) {
+              const error = {
+                errors: [
+                  { detail: 'This user was not mentioned in any tweet' },
+                ],
+              };
+              throw error;
+            } else if (response.data.errors && response.data.errors.length > 0)
+              throw response.data;
+
             const tweets = resp.data;
             const authors = resp.includes.users;
 
@@ -84,6 +92,14 @@ export class TweetsService {
             });
 
             return mergedTweets;
+          }),
+          catchError((error) => {
+            if (error?.response?.status)
+              throw new HttpException(
+                error.response.data,
+                error.response.status,
+              );
+            throw new HttpException(error, 500);
           }),
         ),
     );

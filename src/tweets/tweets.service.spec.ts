@@ -22,6 +22,20 @@ describe('TweetsService', () => {
     expect(service).toBeDefined();
   });
 
+  const mockError: AxiosResponse = {
+    data: {
+      errors: [
+        {
+          details: 'error',
+        },
+      ],
+    },
+    status: 500,
+    statusText: 'Internal Server Error',
+    headers: {},
+    config: {},
+  };
+
   describe('findUser', () => {
     const mockResponse: AxiosResponse = {
       data: {
@@ -41,6 +55,11 @@ describe('TweetsService', () => {
       jest.spyOn(httpService, 'get').mockImplementation(() => of(mockResponse));
       const result = await service.findUser('test');
       expect(result).toEqual(mockResponse.data);
+    });
+
+    it('should throw an error', async () => {
+      jest.spyOn(httpService, 'get').mockImplementation(() => of(mockError));
+      await expect(service.findUser('test')).rejects.toThrow('Http Exception');
     });
   });
 
@@ -78,6 +97,13 @@ describe('TweetsService', () => {
         expect.arrayContaining([
           expect.objectContaining({ author_id: '123', tweet_id: '456' }),
         ]),
+      );
+    });
+
+    it('should throw an error', async () => {
+      jest.spyOn(httpService, 'get').mockImplementation(() => of(mockError));
+      await expect(service.getMentionsOfUser(userData, 'test')).rejects.toThrow(
+        'Http Exception',
       );
     });
   });

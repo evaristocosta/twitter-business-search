@@ -10,4 +10,5 @@ export interface TweetsResponse {
   includes: {
     users: Array<UserData>;
   };
+  meta?: Record<string, unknown>;
 }

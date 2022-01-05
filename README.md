@@ -58,7 +58,7 @@ Then, clone the repository and run the following command inside the project fold
 $ yarn install
 ```
 
-Create a `.env` file at the root of the project, following the structure set on `env.example`. You will need a Twitter API Bearer Token to run the application ([more information here](https://developer.twitter.com/en)).
+Create a `.env` file at the root of the project, following the structure set on `.env.example`. You will need a Twitter API Bearer Token to run the application ([more information here](https://developer.twitter.com/en)).
 
 After that, you can run the application using the following command:
 ```shell

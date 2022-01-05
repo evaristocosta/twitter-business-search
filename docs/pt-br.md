@@ -1,4 +1,4 @@
-[Versão em inglês](/)
+[Versão em inglês](/twitter-business-search/)
 
 TBS (Twitter Business Search) é um projeto construído com propósito pessoal de aprendizagem de ferramentas como NestJS e a API do Twitter.
 
@@ -14,6 +14,7 @@ GET /tweets?business=BusinessUsername&max_results=10
 ```
 
 | Parâmetros | Tipo | Descrição |
+
 | ---------- | ---- | ---------- |
 | `business` | string | **Requerido.** Nome de usuário (username) do Twitter para pesquisa |
 | `max_results` | int | **Requerido.** Quantidade total de tweets (min: 5, max: 100) |

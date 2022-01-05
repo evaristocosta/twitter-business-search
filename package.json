@@ -1,6 +1,6 @@
 {
   "name": "twitter-business-search",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Verificar posts que citaram determinada empresa no Twitter a partir de entrada do usuário",
   "author": "Lucas Costa",
   "private": true,

@@ -1,9 +1,3 @@
-# Twitter Business Search
-
-A simple API for searching mention tweets about a Twitter business or user.
-
-## Description
-
 The TBS (Twitter Business Search) is a project built with the purpose of personal learning of tools like NestJS and the Twitter API.
 
 Its only objective is to retrieve tweets that mention a Twitter business or user based on query parameters.
@@ -21,16 +15,16 @@ A JSON response is expected, containing the following structure:
 
 ```json
 {
-  "business_id": the user id,
-  "business_name": public name,
-  "business_username": Twitter username,
+  "business_id": "the user id",
+  "business_name": "public name",
+  "business_username": "Twitter username",
   "mentions": [
     {
-      "author_name": who have mentioned the user,
-      "author_id": numeric id,
-      "author_username": username from who mentioned,
-      "tweet_id": numeric tweet id,
-      "tweet_text": text of the tweet
+      "author_name": "who have mentioned the user",
+      "author_id": "numeric id",
+      "author_username": "username from who mentioned",
+      "tweet_id": "numeric tweet id",
+      "tweet_text": "text of the tweet"
     },
     ...
   ]

@@ -14,7 +14,6 @@ GET /tweets?business=BusinessUsername&max_results=10
 ```
 
 | Parâmetros | Tipo | Descrição |
-
 | ---------- | ---- | ---------- |
 | `business` | string | **Requerido.** Nome de usuário (username) do Twitter para pesquisa |
 | `max_results` | int | **Requerido.** Quantidade total de tweets (min: 5, max: 100) |

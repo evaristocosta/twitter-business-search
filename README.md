@@ -16,32 +16,49 @@ Its only objective is to retrieve tweets that mention a Twitter business or user
 
 ## Using the API
 
-TBS is freely avaliable on Heroku and can be accessed through this URL: https://twitter-business-search.herokuapp.com/tweets.
+TBS is freely avaliable on Heroku and can be accessed through this URL: [https://twitter-business-search.herokuapp.com/](https://twitter-business-search.herokuapp.com/).
 
-Two query parameters must be present:
+To make a request, use the endpoint:
+```http
+GET /tweets?business=BusinessUsername&max_results=10
+```
 
-- `business`: the username to look for;
-- `max_results`: total tweets to retrieve, respecting the range [5, 100].
+| Parameter | Type | Description |
+| ---------- | ---- | ---------- |
+| `business` | string | **Required**. Twitter username to be searched |
+| `max_results` | int | **Required**. Total tweets to retrieve (min: 5, max: 100) |
 
 A JSON response is expected, containing the following structure:
 
-```json
+```javascript
 {
-  "business_id": "the user id",
-  "business_name": "public name",
-  "business_username": "Twitter username",
+  "business_id": int,
+  "business_name": string,
+  "business_username": string,
   "mentions": [
     {
-      "author_name": "who have mentioned the user",
-      "author_id": "numeric id",
-      "author_username": "username from who mentioned",
-      "tweet_id": "numeric tweet id",
-      "tweet_text": "text of the tweet"
+      "author_name": string,
+      "author_id": int,
+      "author_username": string,
+      "tweet_id": int,
+      "tweet_text": string
     },
     ...
   ]
 }
 ```
+
+From it, you can define:
+
+- `business_id`: id of the Twitter user;
+- `business_name`: public name of the Twitter user;
+- `business_username`: Twitter username of the Twitter user;
+- `mentions`: list of tweets where the user was mentioned;
+- `author_name`: name of the author (user that mentioned the searched user);
+- `author_id`: id of the author;
+- `author_username`: Twitter username of the author;
+- `tweet_id`: id of the tweet;
+- `tweet_text`: text of the tweet.
 
 ## Example
 
